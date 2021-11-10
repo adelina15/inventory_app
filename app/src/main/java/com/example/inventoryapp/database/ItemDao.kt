@@ -8,6 +8,9 @@ interface ItemDao {
     @Insert
     fun insertAll(vararg items: Item)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(item: Item)
+
     @Delete
     fun delete(item: Item)
 

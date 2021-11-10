@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Item::class], version = 1)
 abstract class ItemDatabase : RoomDatabase() {
-    abstract val itemDao: ItemDao
+    abstract fun itemDao(): ItemDao
 
     companion object{
         @Volatile
@@ -22,7 +22,7 @@ abstract class ItemDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         ItemDatabase::class.java,
-                        "item_history_database"
+                        "item_database"
                     )
                         .fallbackToDestructiveMigration()
                         .build()

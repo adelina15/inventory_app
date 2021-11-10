@@ -6,6 +6,9 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/drawable/ic_add.xml" value="0.2703125" />
         <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/drawable/ic_delete.xml" value="0.21481481481481482" />
         <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/layout/fragment_add_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/layout/fragment_item_detail.xml" value="0.264" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/layout/fragment_item_list.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/layout/item_template.xml" value="0.4" />
         <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/layout/items.xml" value="0.6" />
         <entry key="..\:/Users/User/AndroidStudioProjects/InventoryApp/app/src/main/res/layout/toolbar.xml" value="0.2" />
