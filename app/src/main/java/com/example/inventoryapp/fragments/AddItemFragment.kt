@@ -1,15 +1,25 @@
 package com.example.inventoryapp.fragments
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.example.inventoryapp.InventoryApplication
 import com.example.inventoryapp.InventoryViewModel
 import com.example.inventoryapp.InventoryViewModelFactory
@@ -54,11 +64,14 @@ class AddItemFragment : Fragment() {
                 binding.itemName.text.toString(),
                 binding.itemPrice.text.toString(),
                 binding.itemCount.text.toString(),
-                binding.itemSupplier.text.toString()
+                binding.itemSupplier.text.toString(),
+//                binding.image.toBitmap()
             )
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
         }
+        else Toast.makeText(requireContext(),
+            "Entry can not be empty", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -72,7 +85,35 @@ class AddItemFragment : Fragment() {
         binding.saveAction.setOnClickListener {
             addNewItem()
         }
+        binding.uploadButton.setOnClickListener{
+            openGalleryForImage()
+        }
     }
+
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            binding.image.setImageURI(data?.data)
+//            viewModel.getBitmap(data?.data)
+        }
+    }
+
+    private fun openGalleryForImage() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        resultLauncher.launch(intent)
+    }
+
+//    private suspend fun getBitmap(data: Uri?): Bitmap {
+//        val loading = ImageLoader(requireContext())
+//        val request = ImageRequest.Builder(requireContext())
+//            .data(data)
+//            .build()
+//        val result = (loading.execute(request) as SuccessResult).drawable
+//        return (result as BitmapDrawable).bitmap
+//    }
+
 
     /**
      * Called before fragment is destroyed.
@@ -83,6 +124,5 @@ class AddItemFragment : Fragment() {
         val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as
                 InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
-//        _binding = null
     }
 }

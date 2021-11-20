@@ -6,31 +6,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.example.inventoryapp.contract.Delegates
 import com.example.inventoryapp.databinding.ItemsBinding
-import com.example.inventoryapp.contract.RecyclerViewContract
 import com.example.inventoryapp.database.Item
 
-class ItemAdapter : ListAdapter<Item, ItemAdapter.ItemHolder>(ItemsComparator()) {
+class ItemAdapter(private val items: List<Item>, private val itemClicker: Delegates.RecyclerItemClicked) :
+    ListAdapter<Item, ItemAdapter.ItemHolder>(ItemsComparator()) {
 
-    private val presenter = AdapterPresenter()
+    class ItemHolder(view: View) : RecyclerView.ViewHolder(view){
+        val binding = ItemsBinding.bind(view)
 
-    class ItemHolder(view: View) : RecyclerView.ViewHolder(view),
-        RecyclerViewContract.AdapterViewHolder {
-        private val binding = ItemsBinding.bind(view)
-
-        override fun setName(name: String) {
-            binding.name.text = name
+        fun bind(item: Item) = with(binding) {
+            name.text = item.itemName
+            price.text = item.itemPrice.toString()
+            quantity.text = item.itemQuantity.toString()
+            supplier.text = item.itemSupplier
+//            itemImage.load(item.itemImage)
         }
-        override fun setPrice(price: Int) {
-            binding.price.text = price.toString()
-        }
-        override fun setQuantity(quantity: Int) {
-            binding.quantity.text = quantity.toString()
-        }
-        override fun setSupplier(supplier: String) {
-            binding.supplier.text = supplier
-        }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
@@ -39,10 +32,13 @@ class ItemAdapter : ListAdapter<Item, ItemAdapter.ItemHolder>(ItemsComparator())
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        presenter.onBind(position, holder)
+        holder.bind(items[position])
+        holder.binding.layout.setOnClickListener {
+            itemClicker.onItemClick(items[position])
+        }
     }
 
-    override fun getItemCount() = presenter.getCount()
+    override fun getItemCount() = items.size
 
     class ItemsComparator : DiffUtil.ItemCallback<Item>() {
         override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {

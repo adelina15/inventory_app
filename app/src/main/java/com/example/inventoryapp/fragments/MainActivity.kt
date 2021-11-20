@@ -1,4 +1,4 @@
-package com.example.inventoryapp
+package com.example.inventoryapp.fragments
 
 
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.example.inventoryapp.R
 import com.example.inventoryapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -33,11 +34,5 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-        return true
     }
 }
