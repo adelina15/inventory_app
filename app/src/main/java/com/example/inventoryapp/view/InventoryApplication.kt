@@ -1,7 +1,7 @@
-package com.example.inventoryapp
+package com.example.inventoryapp.view
 
 import android.app.Application
-import com.example.inventoryapp.database.ItemDatabase
+import com.example.inventoryapp.model.database.ItemDatabase
 
 
 class InventoryApplication: Application() {

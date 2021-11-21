@@ -1,4 +1,4 @@
-package com.example.inventoryapp.fragments
+package com.example.inventoryapp.view.fragments
 
 import android.os.Bundle
 import android.view.*
@@ -6,22 +6,21 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.inventoryapp.InventoryApplication
-import com.example.inventoryapp.InventoryViewModel
-import com.example.inventoryapp.InventoryViewModelFactory
+import coil.load
 import com.example.inventoryapp.R
 import com.example.inventoryapp.databinding.FragmentItemDetailBinding
+import com.example.inventoryapp.presenter.Presenter
+import com.example.inventoryapp.repository.Repository
+import com.example.inventoryapp.view.InventoryApplication
 
 class ItemDetailFragment : Fragment() {
 
     private val args by navArgs<ItemDetailFragmentArgs>()
 
-    private val viewModel: InventoryViewModel by activityViewModels {
-        InventoryViewModelFactory((activity?.application as InventoryApplication).database.itemDao())
-    }
+    private val presenter by lazy { Presenter(Repository((activity?.application as InventoryApplication).database.itemDao())) }
+
 
     lateinit var binding: FragmentItemDetailBinding
 
@@ -36,7 +35,7 @@ class ItemDetailFragment : Fragment() {
             itemPrice.text = args.currentItem.itemPrice.toString()
             itemCount.text = args.currentItem.itemQuantity.toString()
             itemSupplier.text = args.currentItem.itemSupplier
-
+            itemImg.setImageBitmap(args.currentItem.itemImage)
             //logic for add item button
             addItem.setOnClickListener {
                 val action = ItemDetailFragmentDirections.actionItemDetailFragmentToEditItemFragment(args.currentItem)
@@ -68,7 +67,7 @@ class ItemDetailFragment : Fragment() {
         builder.setTitle("Are you sure you want to delete this item?")
         builder.setMessage("You will not be able to recover your data after deleting it")
         builder.setPositiveButton("Yes") { _, _ ->
-            viewModel.onDelete(args.currentItem)
+            presenter.delete(args.currentItem)
             val action = ItemDetailFragmentDirections.actionItemDetailFragmentToItemListFragment()
             findNavController().navigate(action)
         }

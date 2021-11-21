@@ -1,4 +1,4 @@
-package com.example.inventoryapp.fragments
+package com.example.inventoryapp.view.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,24 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.inventoryapp.InventoryApplication
-import com.example.inventoryapp.InventoryViewModel
-import com.example.inventoryapp.InventoryViewModelFactory
 import com.example.inventoryapp.R
-import com.example.inventoryapp.database.Item
+import com.example.inventoryapp.model.Item
 import com.example.inventoryapp.databinding.FragmentEditItemBinding
+import com.example.inventoryapp.presenter.Presenter
+import com.example.inventoryapp.repository.Repository
+import com.example.inventoryapp.view.InventoryApplication
 
 
 class EditItemFragment : Fragment() {
     private val args by navArgs<EditItemFragmentArgs>()
     lateinit var binding: FragmentEditItemBinding
 
-    private val viewModel: InventoryViewModel by activityViewModels {
-        InventoryViewModelFactory((activity?.application as InventoryApplication).database.itemDao())
-    }
+    private val presenter by lazy { Presenter(Repository((activity?.application as InventoryApplication).database.itemDao())) }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,9 +46,10 @@ class EditItemFragment : Fragment() {
         val price = Integer.parseInt(binding.itemPrice.text.toString())
         val quantity = Integer.parseInt(binding.itemCount.text.toString())
         val supplier = binding.itemSupplier.text.toString()
+        val image = args.currentItem.itemImage
         if (isEntryValid()) {
-            val updatedItem = Item(args.currentItem.id, name, quantity, supplier, price)
-            viewModel.update(updatedItem)
+            val updatedItem = Item(args.currentItem.id, name, quantity, supplier, price, image)
+            presenter.update(updatedItem)
             val action = EditItemFragmentDirections.actionEditItemFragmentToItemListFragment()
             findNavController().navigate(action)
         }
@@ -59,7 +58,7 @@ class EditItemFragment : Fragment() {
     }
 
     private fun isEntryValid(): Boolean {
-        return viewModel.isEntryValid(
+        return presenter.isEntryValid(
             binding.itemName.text.toString(),
             binding.itemPrice.text.toString(),
             binding.itemCount.text.toString(),

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/itemDetailFragment"
-        android:name="com.example.inventoryapp.fragments.ItemDetailFragment"
+        android:name="com.example.inventoryapp.view.fragments.ItemDetailFragment"
         android:label="Details"
         tools:layout="@layout/fragment_item_detail">
         <action
@@ -15,14 +15,14 @@
             app:destination="@id/editItemFragment" />
         <argument
             android:name="currentItem"
-            app:argType="com.example.inventoryapp.database.Item" />
+            app:argType="com.example.inventoryapp.model.Item" />
         <action
             android:id="@+id/action_itemDetailFragment_to_itemListFragment"
             app:destination="@id/itemListFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemListFragment"
-        android:name="com.example.inventoryapp.fragments.ItemListFragment"
+        android:name="com.example.inventoryapp.view.fragments.ItemListFragment"
         android:label="Inventory"
         tools:layout="@layout/fragment_item_list">
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/addItemFragment"
-        android:name="com.example.inventoryapp.fragments.AddItemFragment"
+        android:name="com.example.inventoryapp.view.fragments.AddItemFragment"
         android:label="Add Item">
         <action
             android:id="@+id/action_addItemFragment_to_itemListFragment"
@@ -42,13 +42,13 @@
     </fragment>
     <fragment
         android:id="@+id/editItemFragment"
-        android:name="com.example.inventoryapp.fragments.EditItemFragment"
+        android:name="com.example.inventoryapp.view.fragments.EditItemFragment"
         android:label="EditItemFragment" >
         <action
             android:id="@+id/action_editItemFragment_to_itemListFragment"
             app:destination="@id/itemListFragment" />
         <argument
             android:name="currentItem"
-            app:argType="com.example.inventoryapp.database.Item" />
+            app:argType="com.example.inventoryapp.model.Item" />
     </fragment>
 </navigation>

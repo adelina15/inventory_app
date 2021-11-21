@@ -1,4 +1,4 @@
-package com.example.inventoryapp
+package com.example.inventoryapp.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,23 +6,26 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.example.inventoryapp.R
 import com.example.inventoryapp.contract.Delegates
 import com.example.inventoryapp.databinding.ItemsBinding
-import com.example.inventoryapp.database.Item
+import com.example.inventoryapp.model.Item
 
-class ItemAdapter(private val items: List<Item>, private val itemClicker: Delegates.RecyclerItemClicked) :
+class ItemAdapter(
+    private val items: List<Item>, private val itemClicker: Delegates.RecyclerItemClicked) :
     ListAdapter<Item, ItemAdapter.ItemHolder>(ItemsComparator()) {
 
     class ItemHolder(view: View) : RecyclerView.ViewHolder(view){
         val binding = ItemsBinding.bind(view)
+        fun bind(item: Item) {
+            with(binding) {
+                name.text = item.itemName
+                price.text = item.itemPrice.toString()
+                quantity.text = item.itemQuantity.toString()
+                supplier.text = item.itemSupplier
+                itemImage.setImageBitmap(item.itemImage)
+            }
 
-        fun bind(item: Item) = with(binding) {
-            name.text = item.itemName
-            price.text = item.itemPrice.toString()
-            quantity.text = item.itemQuantity.toString()
-            supplier.text = item.itemSupplier
-//            itemImage.load(item.itemImage)
         }
     }
 

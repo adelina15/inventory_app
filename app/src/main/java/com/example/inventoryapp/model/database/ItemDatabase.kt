@@ -1,12 +1,15 @@
-package com.example.inventoryapp.database
+package com.example.inventoryapp.model.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.inventoryapp.model.Item
 
 
-@Database(entities = [Item::class], version = 1)
+@Database(entities = [Item::class], version = 2)
+@TypeConverters(Converters::class)
 abstract class ItemDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDao
 
