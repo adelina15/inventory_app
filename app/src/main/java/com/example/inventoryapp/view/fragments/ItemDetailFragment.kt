@@ -29,24 +29,25 @@ class ItemDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_item_detail, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.attachView(view)
         with(binding) {
             //set all text fields to current item's values
             itemName.text = args.currentItem.itemName
             itemPrice.text = args.currentItem.itemPrice.toString()
             itemCount.text = args.currentItem.itemQuantity.toString()
             itemSupplier.text = args.currentItem.itemSupplier
-            itemImg.setImageBitmap(args.currentItem.itemImage)
+            itemImg.load(args.currentItem.itemImage)
             //logic for add item button
             addItem.setOnClickListener {
                 val action = ItemDetailFragmentDirections.actionItemDetailFragmentToEditItemFragment(args.currentItem)
                 findNavController().navigate(action)
             }
         }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
     }
 
@@ -60,6 +61,11 @@ class ItemDetailFragment : Fragment() {
             R.id.deleteALl -> alertDialog()
         }
         return true
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.detachView()
     }
 
     private fun alertDialog() {

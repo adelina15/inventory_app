@@ -26,6 +26,7 @@ import com.example.inventoryapp.view.InventoryApplication
 class AddItemFragment : Fragment(), ContractInterface.View {
 
     lateinit var item: Item
+    lateinit var imageUrl: String
     private val presenter by lazy { Presenter(Repository((activity?.application as InventoryApplication).database.itemDao())) }
 
     private lateinit var binding: FragmentAddItemBinding
@@ -52,10 +53,10 @@ class AddItemFragment : Fragment(), ContractInterface.View {
         if (isEntryValid()) {
             val itemToInsert = Item(0,
                 binding.itemName.text.toString(),
+                binding.itemCount.text.toString().toInt(),
+                binding.itemSupplier.text.toString(),
                 binding.itemPrice.text.toString().toInt(),
-                binding.itemCount.text.toString(),
-                binding.itemSupplier.text.toString().toInt(),
-                binding.image.drawable.toBitmap()
+                imageUrl
             )
             presenter.insert(itemToInsert)
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
@@ -67,6 +68,7 @@ class AddItemFragment : Fragment(), ContractInterface.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.attachView(view)
         binding.saveAction.setOnClickListener {
             addNewItem()
         }
@@ -79,8 +81,8 @@ class AddItemFragment : Fragment(), ContractInterface.View {
     { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            binding.image.setImageBitmap(imageBitmap)
+            imageUrl = data?.data.toString()
+            binding.image.setImageURI(data?.data)
         }
     }
 
@@ -90,24 +92,12 @@ class AddItemFragment : Fragment(), ContractInterface.View {
         resultLauncher.launch(intent)
     }
 
-//    private suspend fun getBitmap(data: Uri?): Bitmap {
-//        val loading = ImageLoader(requireContext())
-//        val request = ImageRequest.Builder(requireContext())
-//            .data(data)
-//            .build()
-//        val result = (loading.execute(request) as SuccessResult).drawable
-//       return (result as BitmapDrawable).bitmap
-//    }
-
-
-    /**
-     * Called before fragment is destroyed.
-     */
     override fun onDestroyView() {
         super.onDestroyView()
         // Hide keyboard.
         val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as
                 InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
+        presenter.detachView()
     }
 }

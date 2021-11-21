@@ -29,6 +29,12 @@ class EditItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_item, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.attachView(view)
         with(binding){
             itemName.setText(args.currentItem.itemName)
             itemCount.setText(args.currentItem.itemQuantity.toString())
@@ -38,7 +44,6 @@ class EditItemFragment : Fragment() {
                 updateItem()
             }
         }
-        return binding.root
     }
 
     private fun updateItem(){
@@ -64,5 +69,10 @@ class EditItemFragment : Fragment() {
             binding.itemCount.text.toString(),
             binding.itemSupplier.text.toString()
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.detachView()
     }
 }

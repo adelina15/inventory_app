@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.inventoryapp.R
 import com.example.inventoryapp.contract.Delegates
 import com.example.inventoryapp.databinding.ItemsBinding
@@ -23,7 +24,7 @@ class ItemAdapter(
                 price.text = item.itemPrice.toString()
                 quantity.text = item.itemQuantity.toString()
                 supplier.text = item.itemSupplier
-                itemImage.setImageBitmap(item.itemImage)
+                itemImage.load(item.itemImage)
             }
 
         }

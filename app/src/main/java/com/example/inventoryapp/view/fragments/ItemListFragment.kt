@@ -31,6 +31,12 @@ class ItemListFragment : Fragment(), Delegates.RecyclerItemClicked {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_item_list, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.attachView(view)
         binding.apply {
             rcView.layoutManager = LinearLayoutManager(requireContext())
             addItem.setOnClickListener {
@@ -41,13 +47,6 @@ class ItemListFragment : Fragment(), Delegates.RecyclerItemClicked {
         presenter.getALl().observe(viewLifecycleOwner) {
             binding.rcView.adapter = ItemAdapter(it, this)
         }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        presenter.attachView(view)
-
         setHasOptionsMenu(true)
     }
 
@@ -85,8 +84,8 @@ class ItemListFragment : Fragment(), Delegates.RecyclerItemClicked {
         findNavController().navigate(action)
     }
 
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        presenter.detachView()
-//    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.detachView()
+    }
 }
