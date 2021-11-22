@@ -41,7 +41,7 @@ class ItemDetailFragment : Fragment() {
             itemPrice.text = args.currentItem.itemPrice.toString()
             itemCount.text = args.currentItem.itemQuantity.toString()
             itemSupplier.text = args.currentItem.itemSupplier
-            itemImg.load(args.currentItem.itemImage)
+            itemImg.setImageBitmap(args.currentItem.itemImage)
             //logic for add item button
             addItem.setOnClickListener {
                 val action = ItemDetailFragmentDirections.actionItemDetailFragmentToEditItemFragment(args.currentItem)

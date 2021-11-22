@@ -3,6 +3,7 @@ package com.example.inventoryapp.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,6 @@ class ItemAdapter(
                 price.text = item.itemPrice.toString()
                 quantity.text = item.itemQuantity.toString()
                 supplier.text = item.itemSupplier
-                itemImage.load(item.itemImage)
             }
 
         }
@@ -40,6 +40,7 @@ class ItemAdapter(
         holder.binding.layout.setOnClickListener {
             itemClicker.onItemClick(items[position])
         }
+        holder.binding.itemImage.load(items[position].itemImage)
     }
 
     override fun getItemCount() = items.size

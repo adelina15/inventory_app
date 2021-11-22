@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +17,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.drawable.toBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.example.inventoryapp.R
 import com.example.inventoryapp.contract.ContractInterface
 import com.example.inventoryapp.databinding.FragmentAddItemBinding
@@ -22,11 +27,15 @@ import com.example.inventoryapp.model.Item
 import com.example.inventoryapp.presenter.Presenter
 import com.example.inventoryapp.repository.Repository
 import com.example.inventoryapp.view.InventoryApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AddItemFragment : Fragment(), ContractInterface.View {
 
     lateinit var item: Item
-    lateinit var imageUrl: String
+    lateinit var imageUrl: Uri
+    lateinit var image: Bitmap
     private val presenter by lazy { Presenter(Repository((activity?.application as InventoryApplication).database.itemDao())) }
 
     private lateinit var binding: FragmentAddItemBinding
@@ -56,7 +65,7 @@ class AddItemFragment : Fragment(), ContractInterface.View {
                 binding.itemCount.text.toString().toInt(),
                 binding.itemSupplier.text.toString(),
                 binding.itemPrice.text.toString().toInt(),
-                imageUrl
+                image
             )
             presenter.insert(itemToInsert)
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
@@ -75,14 +84,18 @@ class AddItemFragment : Fragment(), ContractInterface.View {
         binding.uploadButton.setOnClickListener{
             openGalleryForImage()
         }
+
     }
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
-            imageUrl = data?.data.toString()
-            binding.image.setImageURI(data?.data)
+            imageUrl = data?.data!!
+            binding.image.setImageURI(imageUrl)
+            CoroutineScope(Dispatchers.IO).launch {
+                image = getBitmap(imageUrl)
+            }
         }
     }
 
@@ -90,6 +103,15 @@ class AddItemFragment : Fragment(), ContractInterface.View {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         resultLauncher.launch(intent)
+    }
+
+        private suspend fun getBitmap(data: Uri?): Bitmap {
+        val loading = ImageLoader(requireContext())
+        val request = ImageRequest.Builder(requireContext())
+            .data(data)
+            .build()
+        val result = (loading.execute(request) as SuccessResult).drawable
+        return (result as BitmapDrawable).bitmap
     }
 
     override fun onDestroyView() {

@@ -13,5 +13,5 @@ data class Item(
     @ColumnInfo(name = "item_quantity") val itemQuantity: Int,
     @ColumnInfo(name = "item_supplier") val itemSupplier: String,
     @ColumnInfo(name = "item_price") val itemPrice: Int,
-    @ColumnInfo(name = "item_image") val itemImage: String
+    @ColumnInfo(name = "item_image") val itemImage: Bitmap
     ): Parcelable
